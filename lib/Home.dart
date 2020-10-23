@@ -17,21 +17,16 @@ var carts = "\$0.0";
 double cart = 0;
 
 final List<Product> products = <Product>[
-  new Product(
-      'price_1Ha0N4GEyFEWKkD6ZThJu5td',
-      'Snack Proud, Protein Bar – Choc Berry Fudge ,40g',
-      2,
-      '1.png',
-      0,
-      '1B.png'),
-  new Product('price_1HaKq6GEyFEWKkD65pACMH8h',
-      'Snack Proud, Get Seedy Wholefood Bar', 2, '2.png', 0, '2B.png'),
-  new Product('price_1HeaVDGEyFEWKkD61ddGPOEj',
-      'Chocolate Not Chocolate, Choc Truffles, 30g', 4, '3.png', 0, '3B.png'),
-  new Product('price_1Ha0N4GEyFEWKkD6ZThJu5td',
-      'Botanika Bars, Lemon Cheese Cake, 40g', 4, '4.png', 0, '4B.png'),
-  new Product('price_1Ha0N4GEyFEWKkD6ZThJu5td', 'Lemon Cheese Cake, 40g', 4,
-      '5.png', 0, '5B.png'),
+  new Product('price_1Ha0N4GEyFEWKkD6ZThJu5td', 'Snack Proud', 'Protein Bar',
+      'Choc Berry Fudge', 2, '1.png', 0, '1B.png'),
+  new Product('price_1HaKq6GEyFEWKkD65pACMH8h', 'Snack Proud',
+      'Get Seedy Wholefood Bar', '', 2, '2.png', 0, '2B.png'),
+  new Product('price_1HeaVDGEyFEWKkD61ddGPOEj', 'Chocolate Not Chocolate',
+      'Choc Truffles', '', 4, '3.png', 0, '3B.png'),
+  new Product('price_1Ha0N4GEyFEWKkD6ZThJu5td', 'Botanika Bars',
+      'Lemon Cheese Cake', '', 4, '4.png', 0, '4B.png'),
+  new Product('price_1Ha0N4GEyFEWKkD6ZThJu5td', 'Boganiks', 'Lemon Cheese Cake',
+      '', 4, '5.png', 0, '5B.png'),
 ];
 
 MediaQueryData queryData;
@@ -92,51 +87,95 @@ class _homeState extends State<home> {
                             'assets/images/${products[index].icon}',
                             fit:
                                 BoxFit.cover, // this is the solution for border
-                            width: 120.0,
-                            height: 120.0,
+                            width: 180.0,
+                            height: 180.0,
                           ),
                         ),
                         Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              height: 50,
+                              height: 20,
+                              width: 200,
+                              child: Text(' ${products[index].brand}'),
+                            ),
+                            Container(
+                              height: 20,
                               width: 200,
                               child: Text(' ${products[index].label}'),
                             ),
                             Container(
                               height: 20,
                               width: 200,
-                              child: Text('\$ ${products[index].price}'),
-                            )
+                              child: Text(' ${products[index].flavour}'),
+                            ),
+                            Container(
+                              height: 20,
+                              width: 200,
+                              child: Text(
+                                '\$ ${products[index].price}',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                ),
+                                Container(
+                                    child: new GestureDetector(
+                                  onTap: () {
+                                    if (products[index].quantity > 0) {
+                                      setState(() {
+                                        products[index].quantity =
+                                            products[index].quantity - 1;
+
+                                        cart = (cart - (products[index].price));
+                                        carts = ('\$' + cart.toString());
+                                      });
+                                    }
+                                  },
+                                  child: new Text(
+                                    "-",
+                                    style: TextStyle(fontSize: 24),
+                                  ),
+                                )),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                  child:
+                                      Text(products[index].quantity.toString()),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Container(
+                                    child: new GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      products[index].quantity =
+                                          products[index].quantity + 1;
+
+                                      cart = 0;
+                                      for (Product product in products) {
+                                        cart = (cart +
+                                            (product.price * product.quantity));
+                                        carts = ('\$' + cart.toString());
+                                      }
+                                    });
+                                  },
+                                  child: new Text("+"),
+                                )),
+                              ],
+                            ),
                           ],
                         ),
-                        DropdownButton(
-                            value: products[index].quantity,
-                            items: [
-                              DropdownMenuItem(child: Text("0"), value: 0),
-                              DropdownMenuItem(child: Text("1"), value: 1),
-                              DropdownMenuItem(child: Text("2"), value: 2),
-                              DropdownMenuItem(child: Text("3"), value: 3),
-                              DropdownMenuItem(child: Text("4"), value: 4),
-                              DropdownMenuItem(child: Text("5"), value: 5),
-                              DropdownMenuItem(child: Text("6"), value: 6),
-                              DropdownMenuItem(child: Text("7"), value: 7),
-                              DropdownMenuItem(child: Text("8"), value: 8),
-                              DropdownMenuItem(child: Text("9"), value: 9),
-                              DropdownMenuItem(child: Text("10"), value: 10)
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                products[index].quantity = value;
-
-                                cart = 0;
-                                for (Product product in products) {
-                                  cart = (cart +
-                                      (product.price * product.quantity));
-                                  carts = ('\$' + cart.toString());
-                                }
-                              });
-                            }),
                       ]))
                 ]);
               },
